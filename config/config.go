@@ -3,7 +3,6 @@ package config
 import (
 	"github.com/caarlos0/env"
 	"github.com/joho/godotenv"
-	"github.com/sirupsen/logrus"
 	"sync"
 )
 
@@ -36,6 +35,6 @@ func GetEnvs() Envs {
 			panic(err)
 		}
 	})
-	logrus.Info(envInstance)
+
 	return envInstance
 }

@@ -7,7 +7,7 @@ import (
 )
 
 type Envs struct {
-	Address           string `env:"ADDR" envDefault:":8888"`
+	Addr              string `env:"ADDR" envDefault:":8888"`
 	ReadTimeout       int    `env:"READ_TIMEOUT" envDefault:"15"`
 	WriteTimeout      int    `env:"WRITE_TIMEOUT" envDefault:"15"`
 	ReadHeaderTimeout int    `env:"READ_HEADER_TIMEOUT" envDefault:"10"`

@@ -8,10 +8,9 @@ import (
 )
 
 func main() {
-
 	s := &http.Server{
-		Addr:              ":8888",
-		Handler:           handler.NewGinEngine(),
+		Addr:              config.GetEnvs().Addr,
+		Handler:           handler.NewGinEngine(handler.APIHandlers),
 		ReadTimeout:       time.Duration(config.GetEnvs().ReadTimeout) * time.Second,
 		WriteTimeout:      time.Duration(config.GetEnvs().WriteTimeout) * time.Second,
 		ReadHeaderTimeout: time.Duration(config.GetEnvs().ReadHeaderTimeout) * time.Second,

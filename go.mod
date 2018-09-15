@@ -16,7 +16,7 @@ require (
 	golang.org/x/crypto v0.0.0-20180910181607-0e37d006457b // indirect
 	golang.org/x/net v0.0.0-20180911220305-26e67e76b6c3 // indirect
 	golang.org/x/time v0.0.0-20180412165947-fbb02b2291d2 // indirect
-	googlemaps.github.io/maps v0.0.0-20180914025955-d22f9b05c410 // indirect
+	googlemaps.github.io/maps v0.0.0-20180914025955-d22f9b05c410
 	gopkg.in/go-playground/validator.v8 v8.18.2 // indirect
-	gopkg.in/go-playground/validator.v9 v9.21.0 // indirect
+	gopkg.in/go-playground/validator.v9 v9.21.0
 )

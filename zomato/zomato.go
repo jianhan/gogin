@@ -175,7 +175,7 @@ func (c *commonAPI) Collections(request *CollectionsRequest) ([]*Collection, err
 	if err != nil {
 		return nil, err
 	}
-	logrus.Info(string(body))
+
 	// unmarshal to struct
 	collectionsResponse := CollectionsResponse{}
 	if err := json.Unmarshal(body, &collectionsResponse); err != nil {
@@ -184,8 +184,9 @@ func (c *commonAPI) Collections(request *CollectionsRequest) ([]*Collection, err
 
 	// generate collections
 	collections := []*Collection{}
-	for _, v := range collectionsResponse.Collections {
-		collections = append(collections, &v.Collection)
+
+	for k := range collectionsResponse.Collections {
+		collections = append(collections, &collectionsResponse.Collections[k].Collection)
 	}
 
 	return collections, nil

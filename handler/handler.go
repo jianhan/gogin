@@ -8,12 +8,17 @@ import (
 )
 
 func APIHandlers(r *gin.Engine) {
-	store := persistence.NewInMemoryStore(time.Second)
+	store := persistence.NewInMemoryStore(time.Duration(5) * time.Minute)
 	v1 := r.Group("/api/v1")
 	{
 		google := v1.Group("/google")
 		{
-			google.GET("nearby-search", cache.CachePage(store, time.Hour, googleNearbySearch))
+			google.GET("nearby-search", cache.CachePage(store, time.Duration(2)*time.Hour, googleNearbySearch))
+		}
+
+		zomato := v1.Group("/zomato")
+		{
+			zomato.GET("categories", cache.CachePage(store, time.Duration(48)*time.Hour, zomatoCategories))
 		}
 	}
 }

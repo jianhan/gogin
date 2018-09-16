@@ -3,6 +3,7 @@ module github.com/jianhan/gogin
 require (
 	github.com/bradfitz/gomemcache v0.0.0-20180710155616-bc664df96737 // indirect
 	github.com/caarlos0/env v3.3.0+incompatible
+	github.com/etgryphon/stringUp v0.0.0-20121020160746-31534ccd8cac // indirect
 	github.com/garyburd/redigo v2.0.0+incompatible // indirect
 	github.com/gin-contrib/cache v0.0.0-20180914071829-eaa086c1f829
 	github.com/gin-contrib/sse v0.0.0-20170109093832-22d885f9ecc7 // indirect
@@ -12,8 +13,10 @@ require (
 	github.com/go-playground/universal-translator v0.16.0 // indirect
 	github.com/golang/protobuf v1.2.0 // indirect
 	github.com/gomodule/redigo v2.0.0+incompatible // indirect
+	github.com/google/go-querystring v0.0.0-20170111101155-53e6ce116135
 	github.com/google/uuid v1.0.0 // indirect
 	github.com/joho/godotenv v1.3.0
+	github.com/leebenson/conform v0.0.0-20180615210222-bc2e0311fd85
 	github.com/mattn/go-isatty v0.0.4 // indirect
 	github.com/memcachier/mc v2.0.1+incompatible // indirect
 	github.com/patrickmn/go-cache v2.1.0+incompatible

@@ -77,3 +77,7 @@ func NewCommonAPI() (CommonAPI) {
 
 	return commonAPIInstance
 }
+
+type RestaurantAPI interface {
+	Search()
+}

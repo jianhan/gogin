@@ -1,15 +1,14 @@
 package zomato
 
-type DailyMenu struct {
-	DailyMenuID string `json:"daily_menu_id"`
-	Name        string `json:"name"`
-	StartDate   string `json:"start_date"`
-	EndDate     string `json:"end_date"`
-	Dishes      []struct {
-		DishID string `json:"dish_id"`
-		Name   string `json:"name"`
-		Price  string `json:"price"`
-	} `json:"dishes"`
+import "encoding/json"
+
+type RestaurantsResponse struct {
+	ResultsFound int `json:"results_found"`
+	ResultsStart int `json:"results_start"`
+	ResultsShown int `json:"results_shown"`
+	Restaurants  []struct {
+		Restaurant Restaurant `json:"restaurant"`
+	} `json:"restaurants"`
 }
 
 type Restaurant struct {
@@ -17,186 +16,74 @@ type Restaurant struct {
 	Name     string `json:"name"`
 	URL      string `json:"url"`
 	Location struct {
-		Address   string `json:"address"`
-		Locality  string `json:"locality"`
-		City      string `json:"city"`
-		Latitude  string `json:"latitude"`
-		Longitude string `json:"longitude"`
-		Zipcode   string `json:"zipcode"`
-		CountryID string `json:"country_id"`
+		Address         string `json:"address"`
+		Locality        string `json:"locality"`
+		City            string `json:"city"`
+		CityID          int    `json:"city_id"`
+		Latitude        string `json:"latitude"`
+		Longitude       string `json:"longitude"`
+		Zipcode         string `json:"zipcode"`
+		CountryID       int    `json:"country_id"`
+		LocalityVerbose string `json:"locality_verbose"`
 	} `json:"location"`
-	AverageCostForTwo string `json:"average_cost_for_two"`
-	PriceRange        string `json:"price_range"`
-	Currency          string `json:"currency"`
-	Thumb             string `json:"thumb"`
-	FeaturedImage     string `json:"featured_image"`
-	PhotosURL         string `json:"photos_url"`
-	MenuURL           string `json:"menu_url"`
-	EventsURL         string `json:"events_url"`
-	UserRating        struct {
+	SwitchToOrderMenu  int           `json:"switch_to_order_menu"`
+	Cuisines           string        `json:"cuisines"`
+	AverageCostForTwo  int           `json:"average_cost_for_two"`
+	PriceRange         int           `json:"price_range"`
+	Currency           string        `json:"currency"`
+	Offers             []interface{} `json:"offers"`
+	OpentableSupport   int           `json:"opentable_support"`
+	IsZomatoBookRes    int           `json:"is_zomato_book_res"`
+	MezzoProvider      string        `json:"mezzo_provider"`
+	IsBookFormWebView  int           `json:"is_book_form_web_view"`
+	BookFormWebViewURL string        `json:"book_form_web_view_url"`
+	BookAgainURL       string        `json:"book_again_url"`
+	Thumb              string        `json:"thumb"`
+	UserRating         struct {
 		AggregateRating string `json:"aggregate_rating"`
 		RatingText      string `json:"rating_text"`
 		RatingColor     string `json:"rating_color"`
 		Votes           string `json:"votes"`
 	} `json:"user_rating"`
-	HasOnlineDelivery string `json:"has_online_delivery"`
-	IsDeliveringNow   string `json:"is_delivering_now"`
-	HasTableBooking   string `json:"has_table_booking"`
-	Deeplink          string `json:"deeplink"`
-	Cuisines          string `json:"cuisines"`
-	AllReviewsCount   string `json:"all_reviews_count"`
-	PhotoCount        string `json:"photo_count"`
-	PhoneNumbers      string `json:"phone_numbers"`
-	Photos            []struct {
-		ID       string `json:"id"`
-		URL      string `json:"url"`
-		ThumbURL string `json:"thumb_url"`
-		User     struct {
-			Name            string `json:"name"`
-			ZomatoHandle    string `json:"zomato_handle"`
-			FoodieLevel     string `json:"foodie_level"`
-			FoodieLevelNum  string `json:"foodie_level_num"`
-			FoodieColor     string `json:"foodie_color"`
-			ProfileURL      string `json:"profile_url"`
-			ProfileDeeplink string `json:"profile_deeplink"`
-			ProfileImage    string `json:"profile_image"`
-		} `json:"user"`
-		ResID         string `json:"res_id"`
-		Caption       string `json:"caption"`
-		Timestamp     string `json:"timestamp"`
-		FriendlyTime  string `json:"friendly_time"`
-		Width         string `json:"width"`
-		Height        string `json:"height"`
-		CommentsCount string `json:"comments_count"`
-		LikesCount    string `json:"likes_count"`
-	} `json:"photos"`
-	AllReviews []struct {
-		Rating             string `json:"rating"`
-		ReviewText         string `json:"review_text"`
-		ID                 string `json:"id"`
-		RatingColor        string `json:"rating_color"`
-		ReviewTimeFriendly string `json:"review_time_friendly"`
-		RatingText         string `json:"rating_text"`
-		Timestamp          string `json:"timestamp"`
-		Likes              string `json:"likes"`
-		User               struct {
-			Name            string `json:"name"`
-			ZomatoHandle    string `json:"zomato_handle"`
-			FoodieLevel     string `json:"foodie_level"`
-			FoodieLevelNum  string `json:"foodie_level_num"`
-			FoodieColor     string `json:"foodie_color"`
-			ProfileURL      string `json:"profile_url"`
-			ProfileDeeplink string `json:"profile_deeplink"`
-			ProfileImage    string `json:"profile_image"`
-		} `json:"user"`
-		CommentsCount string `json:"comments_count"`
-	} `json:"all_reviews"`
+	PhotosURL                   string `json:"photos_url"`
+	MenuURL                     string `json:"menu_url"`
+	FeaturedImage               string `json:"featured_image"`
+	HasOnlineDelivery           int    `json:"has_online_delivery"`
+	IsDeliveringNow             int    `json:"is_delivering_now"`
+	IncludeBogoOffers           bool   `json:"include_bogo_offers"`
+	Deeplink                    string `json:"deeplink"`
+	IsTableReservationSupported int    `json:"is_table_reservation_supported"`
+	HasTableBooking             int    `json:"has_table_booking"`
+	EventsURL                   string `json:"events_url"`
 }
 
-type Review struct {
-	Rating             string `json:"rating"`
-	ReviewText         string `json:"review_text"`
-	ID                 string `json:"id"`
-	RatingColor        string `json:"rating_color"`
-	ReviewTimeFriendly string `json:"review_time_friendly"`
-	RatingText         string `json:"rating_text"`
-	Timestamp          string `json:"timestamp"`
-	Likes              string `json:"likes"`
-	User               struct {
-		Name            string `json:"name"`
-		ZomatoHandle    string `json:"zomato_handle"`
-		FoodieLevel     string `json:"foodie_level"`
-		FoodieLevelNum  string `json:"foodie_level_num"`
-		FoodieColor     string `json:"foodie_color"`
-		ProfileURL      string `json:"profile_url"`
-		ProfileDeeplink string `json:"profile_deeplink"`
-		ProfileImage    string `json:"profile_image"`
-	} `json:"user"`
-	CommentsCount string `json:"comments_count"`
+type RestaurantsRequest struct {
+	Q        string  `conform:"trim" form:"q" json:"q" url:"q"`
+	Lat      float64 `conform:"trim" form:"lat" json:"lat" binding:"required,lat" url:"lat" validate:"lat"`
+	Lon      float64 `conform:"trim" form:"lon" json:"lon" binding:"required,lng" url:"lon" validate:"lng"`
+	Start    uint    `form:"start" json:"start" url:"start"`
+	Count    uint    `form:"count" json:"count" url:"count"`
+	Radius   uint    `form:"count" json:"count" url:"count" validate:"max=5000,min=500"`
+	Cuisines string  `form:"cuisines" json:"cuisines" url:"cuisines"`
+	Category uint    `form:"category" json:"category" url:"category"`
+	Sort     string  `form:"sort" json:"sort" url:"sort" validation:"oneof=cost rating real_distance"`
 }
 
-type Search struct {
-	ResultsFound string `json:"results_found"`
-	ResultsStart string `json:"results_start"`
-	ResultsShown string `json:"results_shown"`
-	Restaurants  []struct {
-		ID       string `json:"id"`
-		Name     string `json:"name"`
-		URL      string `json:"url"`
-		Location struct {
-			Address   string `json:"address"`
-			Locality  string `json:"locality"`
-			City      string `json:"city"`
-			Latitude  string `json:"latitude"`
-			Longitude string `json:"longitude"`
-			Zipcode   string `json:"zipcode"`
-			CountryID string `json:"country_id"`
-		} `json:"location"`
-		AverageCostForTwo string `json:"average_cost_for_two"`
-		PriceRange        string `json:"price_range"`
-		Currency          string `json:"currency"`
-		Thumb             string `json:"thumb"`
-		FeaturedImage     string `json:"featured_image"`
-		PhotosURL         string `json:"photos_url"`
-		MenuURL           string `json:"menu_url"`
-		EventsURL         string `json:"events_url"`
-		UserRating        struct {
-			AggregateRating string `json:"aggregate_rating"`
-			RatingText      string `json:"rating_text"`
-			RatingColor     string `json:"rating_color"`
-			Votes           string `json:"votes"`
-		} `json:"user_rating"`
-		HasOnlineDelivery string `json:"has_online_delivery"`
-		IsDeliveringNow   string `json:"is_delivering_now"`
-		HasTableBooking   string `json:"has_table_booking"`
-		Deeplink          string `json:"deeplink"`
-		Cuisines          string `json:"cuisines"`
-		AllReviewsCount   string `json:"all_reviews_count"`
-		PhotoCount        string `json:"photo_count"`
-		PhoneNumbers      string `json:"phone_numbers"`
-		Photos            []struct {
-			ID       string `json:"id"`
-			URL      string `json:"url"`
-			ThumbURL string `json:"thumb_url"`
-			User     struct {
-				Name            string `json:"name"`
-				ZomatoHandle    string `json:"zomato_handle"`
-				FoodieLevel     string `json:"foodie_level"`
-				FoodieLevelNum  string `json:"foodie_level_num"`
-				FoodieColor     string `json:"foodie_color"`
-				ProfileURL      string `json:"profile_url"`
-				ProfileDeeplink string `json:"profile_deeplink"`
-				ProfileImage    string `json:"profile_image"`
-			} `json:"user"`
-			ResID         string `json:"res_id"`
-			Caption       string `json:"caption"`
-			Timestamp     string `json:"timestamp"`
-			FriendlyTime  string `json:"friendly_time"`
-			Width         string `json:"width"`
-			Height        string `json:"height"`
-			CommentsCount string `json:"comments_count"`
-			LikesCount    string `json:"likes_count"`
-		} `json:"photos"`
-		AllReviews []struct {
-			Rating             string `json:"rating"`
-			ReviewText         string `json:"review_text"`
-			ID                 string `json:"id"`
-			RatingColor        string `json:"rating_color"`
-			ReviewTimeFriendly string `json:"review_time_friendly"`
-			RatingText         string `json:"rating_text"`
-			Timestamp          string `json:"timestamp"`
-			Likes              string `json:"likes"`
-			User               struct {
-				Name            string `json:"name"`
-				ZomatoHandle    string `json:"zomato_handle"`
-				FoodieLevel     string `json:"foodie_level"`
-				FoodieLevelNum  string `json:"foodie_level_num"`
-				FoodieColor     string `json:"foodie_color"`
-				ProfileURL      string `json:"profile_url"`
-				ProfileDeeplink string `json:"profile_deeplink"`
-				ProfileImage    string `json:"profile_image"`
-			} `json:"user"`
-			CommentsCount string `json:"comments_count"`
-		} `json:"all_reviews"`
-	} `json:"restaurants"`
+func (c *commonAPI) SearchRestaurants(request *RestaurantsRequest) ([]*Restaurant, error) {
+	body, err := c.GetHttpRequest(request, "search")
+	if err != nil {
+		return nil, err
+	}
+
+	restaurantsResponse := RestaurantsResponse{}
+	if err := json.Unmarshal(body, &restaurantsResponse); err != nil {
+		return nil, err
+	}
+
+	restaurants := []*Restaurant{}
+	for k := range restaurantsResponse.Restaurants {
+		restaurants = append(restaurants, &restaurantsResponse.Restaurants[k].Restaurant)
+	}
+
+	return restaurants, nil
 }

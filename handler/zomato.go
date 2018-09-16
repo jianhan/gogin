@@ -53,3 +53,21 @@ func zomatoCollections(c *gin.Context) {
 
 	c.JSON(http.StatusOK, collections)
 }
+
+func zomatoEstablishments(c *gin.Context) {
+	// get request
+	var req zomato.EstablishmentsRequest
+	if err := c.ShouldBindQuery(&req); err != nil {
+		c.JSON(http.StatusBadRequest, &gerr.APIError{Details: err.Error()})
+		return
+	}
+	conform.Strings(&req)
+
+	establishments, err := zomato.NewCommonAPI().Establishments(&req)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, &gerr.APIError{Details: err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, establishments)
+}

@@ -5,9 +5,11 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/jianhan/gogin/error"
 	"github.com/jianhan/gogin/google"
+	"github.com/patrickmn/go-cache"
 	"googlemaps.github.io/maps"
 	"gopkg.in/go-playground/validator.v9"
 	"net/http"
+	"time"
 )
 
 type googleNearbySearchRequest struct {
@@ -20,6 +22,23 @@ type googleNearbySearchRequest struct {
 	OpenNow   bool    `form:"open_now" json:"open_now,omitempty"`
 	RankBy    string  `form:"rankby" json:"rankby" validate:"oneof=prominence distance"`
 	PageToken string  `form:"page_token" json:"page_token"`
+}
+
+func cacheHandler(c *gin.Context, cache *cache.Cache, handlerFunc func(c *gin.Context), duration time.Duration) func(c *gin.Context) {
+	// only cache for GET request
+	if c.Request.Method != http.MethodGet {
+		return handlerFunc
+	}
+
+	cachedData, found := cache.Get(c.Request.URL.RawPath)
+	if found {
+		return func(c *gin.Context) {
+			c.JSON(http.StatusOK, cachedData)
+			return
+		}
+	}
+
+	return handlerFunc
 }
 
 func googleNearbySearch(c *gin.Context) {
@@ -45,13 +64,12 @@ func googleNearbySearch(c *gin.Context) {
 		return
 	}
 
-	// make API request
+	// generate request
 	client, err := google.MapClient()
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, &error.APIError{Status: http.StatusInternalServerError, Details: err.Error()})
 		return
 	}
-
 	var searchRequest *maps.NearbySearchRequest
 	if req.PageToken != "" {
 		searchRequest = &maps.NearbySearchRequest{PageToken: req.PageToken}
@@ -63,8 +81,12 @@ func googleNearbySearch(c *gin.Context) {
 			MaxPrice: maps.PriceLevel(req.MaxPrice),
 			Type:     maps.PlaceType("restaurant"),
 		}
+		if req.Keyword != "" {
+			searchRequest.Keyword = req.Keyword
+		}
 	}
 
+	// make API call
 	response, err := client.NearbySearch(c, searchRequest)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, &error.APIError{Status: http.StatusInternalServerError, Details: err.Error()})

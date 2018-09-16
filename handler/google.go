@@ -26,14 +26,14 @@ type googleNearbySearchRequest struct {
 func googleNearbySearch(c *gin.Context) {
 	var req googleNearbySearchRequest
 	if err := c.ShouldBindQuery(&req); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"Error": err})
+		c.JSON(http.StatusBadRequest, &gerr.APIError{Details: err.Error()})
 		return
 	}
 	conform.Strings(&req)
 
 	// validation
 	if vErr := validator.New().Struct(req); vErr != nil {
-		apiError := &gerr.APIError{Status: http.StatusBadRequest, Details: "validation error"}
+		apiError := &gerr.APIError{Details: "validation error"}
 		if _, ok := vErr.(*validator.InvalidValidationError); ok {
 			c.JSON(http.StatusBadRequest, apiError)
 			return
@@ -50,7 +50,7 @@ func googleNearbySearch(c *gin.Context) {
 	// generate request
 	client, err := google.MapClient()
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, &gerr.APIError{Status: http.StatusInternalServerError, Details: err.Error()})
+		c.JSON(http.StatusInternalServerError, &gerr.APIError{Details: err.Error()})
 		return
 	}
 	var searchRequest *maps.NearbySearchRequest
@@ -72,7 +72,7 @@ func googleNearbySearch(c *gin.Context) {
 	// make API call
 	response, err := client.NearbySearch(c, searchRequest)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, &gerr.APIError{Status: http.StatusInternalServerError, Details: err.Error()})
+		c.JSON(http.StatusInternalServerError, &gerr.APIError{Details: err.Error()})
 		return
 	}
 

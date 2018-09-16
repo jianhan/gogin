@@ -23,6 +23,7 @@ func APIHandlers(r *gin.Engine) {
 			zomato.GET("collections", cache.CachePage(store, time.Duration(24)*time.Hour, zomatoCollections))
 			zomato.GET("establishments", cache.CachePage(store, time.Duration(24)*time.Hour, zomatoEstablishments))
 			zomato.GET("cuisines", cache.CachePage(store, time.Duration(48)*time.Hour, zomatoCuisines))
+			zomato.GET("search-restaurants", cache.CachePage(store, time.Duration(5)*time.Minute, zomatoSearchRestaurants))
 		}
 	}
 }

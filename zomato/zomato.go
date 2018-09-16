@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/google/go-querystring/query"
 	"github.com/jianhan/gogin/config"
+	"github.com/sirupsen/logrus"
 	"io/ioutil"
 	"net/http"
 	"net/url"
@@ -32,7 +33,7 @@ func (b *base) GetHttpRequest(r interface{}, apiPrefix string) ([]byte, error) {
 	}
 	apiUrl.Path += fmt.Sprintf("/%s", apiPrefix)
 	apiUrl.RawQuery = queryString
-
+	logrus.Info(apiUrl.String())
 	client := &http.Client{}
 	req, err := http.NewRequest(http.MethodGet, apiUrl.String(), nil)
 	if err != nil {
@@ -55,8 +56,10 @@ func (b *base) GetHttpRequest(r interface{}, apiPrefix string) ([]byte, error) {
 }
 
 var (
-	commonAPIInstance CommonAPI
-	once              sync.Once
+	commonAPIInstance         CommonAPI
+	onceCommonAPIInstance     sync.Once
+	restaurantAPIInstance     RestaurantAPI
+	onceRestaurantAPIInstance sync.Once
 )
 
 type CommonAPI interface {
@@ -71,7 +74,7 @@ type commonAPI struct {
 }
 
 func NewCommonAPI() (CommonAPI) {
-	once.Do(func() {
+	onceCommonAPIInstance.Do(func() {
 		commonAPIInstance = &commonAPI{base: base{apiBaseURL: config.GetEnvs().ZomatoAPIUrl, apiKey: config.GetEnvs().ZomatoAPIKey}}
 	})
 
@@ -79,5 +82,17 @@ func NewCommonAPI() (CommonAPI) {
 }
 
 type RestaurantAPI interface {
-	Search()
+	SearchRestaurants(request *RestaurantsRequest) ([]*Restaurant, error)
+}
+
+type restaurantAPI struct {
+	base
+}
+
+func NewRestaurantAPI() RestaurantAPI {
+	onceRestaurantAPIInstance.Do(func() {
+		restaurantAPIInstance = &restaurantAPI{base: base{apiBaseURL: config.GetEnvs().ZomatoAPIUrl, apiKey: config.GetEnvs().ZomatoAPIKey}}
+	})
+
+	return restaurantAPIInstance
 }

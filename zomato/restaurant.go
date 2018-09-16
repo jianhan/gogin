@@ -1,6 +1,8 @@
 package zomato
 
-import "encoding/json"
+import (
+	"encoding/json"
+)
 
 type RestaurantsResponse struct {
 	ResultsFound int `json:"results_found"`
@@ -58,19 +60,19 @@ type Restaurant struct {
 }
 
 type RestaurantsRequest struct {
-	Q        string  `conform:"trim" form:"q" json:"q" url:"q"`
-	Lat      float64 `conform:"trim" form:"lat" json:"lat" binding:"required,lat" url:"lat" validate:"lat"`
-	Lon      float64 `conform:"trim" form:"lon" json:"lon" binding:"required,lng" url:"lon" validate:"lng"`
-	Start    uint    `form:"start" json:"start" url:"start"`
-	Count    uint    `form:"count" json:"count" url:"count"`
-	Radius   uint    `form:"count" json:"count" url:"count" validate:"max=5000,min=500"`
-	Cuisines string  `form:"cuisines" json:"cuisines" url:"cuisines"`
-	Category uint    `form:"category" json:"category" url:"category"`
-	Sort     string  `form:"sort" json:"sort" url:"sort" validation:"oneof=cost rating real_distance"`
+	Q        string  `conform:"trim" form:"q" json:"q,omitempty" url:"q"`
+	Lat      float64 `conform:"trim" form:"lat" json:"lat" binding:"required" url:"lat" validate:"lat"`
+	Lon      float64 `conform:"trim" form:"lon" json:"lon" binding:"required" url:"lon" validate:"lng"`
+	Start    uint    `form:"start" json:"start,omitempty" url:"start"`
+	Count    uint    `form:"count" json:"count,omitempty" url:"count"`
+	Radius   uint    `form:"radius" json:"radius,omitempty" url:"count" validate:"max=5000,min=500"`
+	Cuisines string  `form:"cuisines" json:"cuisines,omitempty" url:"cuisines"`
+	Category uint    `form:"category" json:"category,omitempty" url:"category"`
+	Sort     string  `form:"sort" json:"sort" url:"sort,omitempty" validation:"oneof=cost rating real_distance"`
 }
 
-func (c *commonAPI) SearchRestaurants(request *RestaurantsRequest) ([]*Restaurant, error) {
-	body, err := c.GetHttpRequest(request, "search")
+func (r *restaurantAPI) SearchRestaurants(request *RestaurantsRequest) ([]*Restaurant, error) {
+	body, err := r.GetHttpRequest(request, "search")
 	if err != nil {
 		return nil, err
 	}

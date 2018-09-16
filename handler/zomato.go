@@ -71,3 +71,21 @@ func zomatoEstablishments(c *gin.Context) {
 
 	c.JSON(http.StatusOK, establishments)
 }
+
+func zomatoCuisines(c *gin.Context) {
+	// get request
+	var req zomato.CuisinesRequest
+	if err := c.ShouldBindQuery(&req); err != nil {
+		c.JSON(http.StatusBadRequest, &gerr.APIError{Details: err.Error()})
+		return
+	}
+	conform.Strings(&req)
+
+	cuisines, err := zomato.NewCommonAPI().Cuisines(&req)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, &gerr.APIError{Details: err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, cuisines)
+}

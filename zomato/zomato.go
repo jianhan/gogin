@@ -64,6 +64,7 @@ type CommonAPI interface {
 	Cities(request *CitiesRequest) ([]*City, error)
 	Collections(request *CollectionsRequest) ([]*Collection, error)
 	Establishments(request *EstablishmentsRequest) ([]*Establishment, error)
+	Cuisines(request *CuisinesRequest) ([]*Cuisine, error)
 }
 type commonAPI struct {
 	base

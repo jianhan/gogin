@@ -46,8 +46,8 @@ func (c *commonAPI) Cities(request *CitiesRequest) ([]*City, error) {
 	}
 
 	cities := []*City{}
-	for _, v := range citiesResponse.LocationSuggestions {
-		cities = append(cities, &v)
+	for k := range citiesResponse.LocationSuggestions {
+		cities = append(cities, &citiesResponse.LocationSuggestions[k])
 	}
 
 	return cities, nil

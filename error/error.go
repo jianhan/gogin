@@ -3,7 +3,7 @@ package error
 import "fmt"
 
 type APIError struct {
-	Status  int                    `json:"status"`
+	Status  int                    `json:"status,omitempty"`
 	Details string                 `json:"details,omitempty"`
 	Data    map[string]interface{} `json:"data,omitempty"`
 }

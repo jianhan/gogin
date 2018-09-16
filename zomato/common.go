@@ -35,14 +35,23 @@ type City struct {
 	StateName            string `json:"state_name"`
 	StateCode            string `json:"state_code"`
 }
+type CollectionsResponse struct {
+	Collections []struct {
+		Collection Collection `json:"collection"`
+	} `json:"collections"`
+	HasMore     int    `json:"has_more"`
+	ShareURL    string `json:"share_url"`
+	DisplayText string `json:"display_text"`
+	HasTotal    int    `json:"has_total"`
+}
 
 type Collection struct {
-	CollectionID string `json:"collection_id"`
+	CollectionID int    `json:"collection_id"`
 	Title        string `json:"title"`
 	URL          string `json:"url"`
 	Description  string `json:"description"`
 	ImageURL     string `json:"image_url"`
-	ResCount     string `json:"res_count"`
+	ResCount     int    `json:"res_count"`
 	ShareURL     string `json:"share_url"`
 }
 

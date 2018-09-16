@@ -25,6 +25,7 @@ var (
 type CommonAPI interface {
 	Categories() ([]*Category, error)
 	Cities(request *CitiesRequest) ([]*City, error)
+	Collections(request *CollectionsRequest) ([]*Collection, error)
 }
 
 type commonAPI struct {
@@ -137,7 +138,7 @@ type CollectionsRequest struct {
 	CityID uint `json:"city_id" form:"city_id" binding:"required" url:"city_id"`
 }
 
-func (c *commonAPI) Collections(request *CollectionsRequest) ([]*City, error) {
+func (c *commonAPI) Collections(request *CollectionsRequest) ([]*Collection, error) {
 	values, err := query.Values(request)
 	if err != nil {
 		return nil, err
@@ -174,18 +175,18 @@ func (c *commonAPI) Collections(request *CollectionsRequest) ([]*City, error) {
 	if err != nil {
 		return nil, err
 	}
-
+	logrus.Info(string(body))
 	// unmarshal to struct
-	citiesResponse := CitiesResponse{}
-	if err := json.Unmarshal(body, &citiesResponse); err != nil {
+	collectionsResponse := CollectionsResponse{}
+	if err := json.Unmarshal(body, &collectionsResponse); err != nil {
 		return nil, err
 	}
 
-	// generate cities
-	cities := []*City{}
-	for _, v := range citiesResponse.LocationSuggestions {
-		cities = append(cities, &v)
+	// generate collections
+	collections := []*Collection{}
+	for _, v := range collectionsResponse.Collections {
+		collections = append(collections, &v.Collection)
 	}
 
-	return cities, nil
+	return collections, nil
 }

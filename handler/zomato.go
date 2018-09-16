@@ -37,5 +37,19 @@ func zomatoCities(c *gin.Context) {
 }
 
 func zomatoCollections(c *gin.Context) {
+	// get request
+	var req zomato.CollectionsRequest
+	if err := c.ShouldBindQuery(&req); err != nil {
+		c.JSON(http.StatusBadRequest, &gerr.APIError{Details: err.Error()})
+		return
+	}
+	conform.Strings(&req)
 
+	collections, err := zomato.NewCommonAPI().Collections(&req)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, &gerr.APIError{Details: err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, collections)
 }

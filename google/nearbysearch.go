@@ -1,5 +1,8 @@
 package google
 
+import "googlemaps.github.io/maps"
+
+// NearbySearchRequest is customized search request for invoking google near by search API.
 type NearbySearchRequest struct {
 	Lat       float64 `json:"lat,omitempty" form:"lat,omitempty" url:"lat" validate:"required,lat"`
 	Lng       float64 `json:"lng,omitempty" form:"lng,omitempty" url:"lat" validate:"required,lng"`
@@ -13,5 +16,5 @@ type NearbySearchRequest struct {
 }
 
 type NearbySearch interface {
-	Search()
+	Search(req *NearbySearchRequest) (maps.PlacesSearchResponse, error)
 }

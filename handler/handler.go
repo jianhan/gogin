@@ -12,13 +12,17 @@ func APIHandlers(r *gin.Engine) {
 
 	// store for cache purpose
 	store := persistence.NewInMemoryStore(time.Duration(5) * time.Minute)
+
+	// api v1 version
 	v1 := r.Group("/api/v1")
 	{
+		// google nearby search
 		google := v1.Group("/google")
 		{
 			google.GET("nearby-search", cache.CachePage(store, time.Duration(2)*time.Hour, googleNearbySearch))
 		}
 
+		// zomato search
 		zomato := v1.Group("/zomato")
 		{
 			zomato.GET("categories", cache.CachePage(store, time.Duration(96)*time.Hour, zomatoCategories))

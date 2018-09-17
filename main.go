@@ -9,9 +9,11 @@ import (
 )
 
 func main() {
+
+	// config server
 	s := &http.Server{
 		Addr:              config.GetEnvs().Addr,
-		Handler:           NewGinEngine(handler.APIHandlers),
+		Handler:           newGinEngine(handler.APIHandlers),
 		ReadTimeout:       time.Duration(config.GetEnvs().ReadTimeout) * time.Second,
 		WriteTimeout:      time.Duration(config.GetEnvs().WriteTimeout) * time.Second,
 		ReadHeaderTimeout: time.Duration(config.GetEnvs().ReadHeaderTimeout) * time.Second,
@@ -21,7 +23,8 @@ func main() {
 	s.ListenAndServe()
 }
 
-func NewGinEngine(opts ...func(*gin.Engine)) *gin.Engine {
+// newGinEngine return a new gin engine with optional functions.
+func newGinEngine(opts ...func(*gin.Engine)) *gin.Engine {
 	r := gin.Default()
 	for _, opt := range opts {
 		opt(r)

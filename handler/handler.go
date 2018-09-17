@@ -7,7 +7,10 @@ import (
 	"time"
 )
 
+// APIHandlers receive an gin engine and register API routes.
 func APIHandlers(r *gin.Engine) {
+
+	// store for cache purpose
 	store := persistence.NewInMemoryStore(time.Duration(5) * time.Minute)
 	v1 := r.Group("/api/v1")
 	{

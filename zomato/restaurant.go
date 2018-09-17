@@ -60,15 +60,15 @@ type Restaurant struct {
 }
 
 type RestaurantsRequest struct {
-	Q        string  `conform:"trim" form:"q" json:"q,omitempty" url:"q"`
-	Lat      float64 `conform:"trim" form:"lat" json:"lat" binding:"required" url:"lat" validate:"lat"`
-	Lon      float64 `conform:"trim" form:"lon" json:"lon" binding:"required" url:"lon" validate:"lng"`
-	Start    uint    `form:"start" json:"start,omitempty" url:"start"`
-	Count    uint    `form:"count" json:"count,omitempty" url:"count"`
-	Radius   uint    `form:"radius" json:"radius,omitempty" url:"count" validate:"max=5000,min=500"`
-	Cuisines string  `form:"cuisines" json:"cuisines,omitempty" url:"cuisines"`
-	Category uint    `form:"category" json:"category,omitempty" url:"category"`
-	Sort     string  `form:"sort" json:"sort" url:"sort,omitempty" validation:"oneof=cost rating real_distance"`
+	Q        string  `conform:"trim" form:"q" json:"q,omitempty" url:"q,omitempty"`
+	Lat      float64 `conform:"trim" form:"lat" json:"lat,omitempty" binding:"required" url:"lat" validate:"lat"`
+	Lon      float64 `conform:"trim" form:"lon" json:"lon,omitempty" binding:"required" url:"lon" validate:"lng"`
+	Start    uint    `form:"start" json:"start,omitempty" url:"start,omitempty"`
+	Count    uint    `form:"count" json:"count,omitempty" url:"count,omitempty"`
+	Radius   uint    `form:"radius" json:"radius,omitempty" url:"count,omitempty" validate:"max=5000,min=500"`
+	Cuisines string  `form:"cuisines" json:"cuisines,omitempty" url:"cuisines,omitempty"`
+	Category uint    `form:"category" json:"category,omitempty" url:"category,omitempty"`
+	Sort     string  `form:"sort" json:"sort,omitempty" url:"sort,omitempty" validation:"oneof=cost rating real_distance"`
 }
 
 func (r *restaurantAPI) SearchRestaurants(request *RestaurantsRequest) ([]*Restaurant, error) {

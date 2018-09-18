@@ -1,12 +1,13 @@
 package handler
 
 import (
+	"github.com/gin-contrib/cache"
 	"github.com/gin-contrib/cache/persistence"
-	"github.com/gin-gonic/contrib/cache"
 	"github.com/gin-gonic/gin"
 	gerr "github.com/jianhan/gogin/error"
 	"github.com/jianhan/gogin/google"
 	"github.com/leebenson/conform"
+	"github.com/sirupsen/logrus"
 	"net/http"
 	"time"
 )
@@ -17,9 +18,9 @@ type googleAPIHandlerRegister struct {
 
 func (g *googleAPIHandlerRegister) Register(r *gin.RouterGroup) {
 	store := persistence.NewInMemoryStore(time.Duration(5) * time.Minute)
-	googleNearbySearch := r.Group("/google")
+	googleNearbySearchRouter := r.Group("/google")
 	{
-		googleNearbySearch.GET("nearby-search", cache.CachePage(store, time.Duration(2)*time.Hour, googleNearbySearch))
+		googleNearbySearchRouter.GET("nearby-search", cache.CachePage(store, time.Duration(2)*time.Hour, g.NearbySearch))
 	}
 }
 
@@ -31,6 +32,7 @@ func (g *googleAPIHandlerRegister) NearbySearch(c *gin.Context) {
 		return
 	}
 	conform.Strings(&req)
+	logrus.Info(req)
 
 	res, status, err := g.nearbySearch.Search(c, &req)
 	if err != nil {

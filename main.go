@@ -5,7 +5,6 @@ import (
 	"github.com/jianhan/gogin/config"
 	"github.com/jianhan/gogin/google"
 	"github.com/jianhan/gogin/handler"
-	"googlemaps.github.io/maps"
 	"log"
 	"net/http"
 	"time"
@@ -14,7 +13,7 @@ import (
 func main() {
 	r := gin.Default()
 
-	googleMapClient, err := maps.NewClient(maps.WithAPIKey(config.GetEnvs().GoogleMapAPIKey))
+	googleMapClient, err := google.NewGoogleMapClient()
 	if err != nil {
 		panic(err)
 		log.Fatalf("fatal error: %s", err)

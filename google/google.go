@@ -5,7 +5,7 @@ import (
 	"googlemaps.github.io/maps"
 )
 
-func MapClient() (c *maps.Client, err error) {
+func NewGoogleMapClient() (c *maps.Client, err error) {
 	if c, err = maps.NewClient(maps.WithAPIKey(config.GetEnvs().GoogleMapAPIKey)); err != nil {
 		return
 	}

@@ -62,13 +62,6 @@ var (
 	onceRestaurantAPIInstance sync.Once
 )
 
-type CommonAPI interface {
-	Categories() ([]*Category, error)
-	Cities(request *CitiesRequest) ([]*City, error)
-	Collections(request *CollectionsRequest) ([]*Collection, error)
-	Establishments(request *EstablishmentsRequest) ([]*Establishment, error)
-	Cuisines(request *CuisinesRequest) ([]*Cuisine, error)
-}
 type commonAPI struct {
 	base
 }

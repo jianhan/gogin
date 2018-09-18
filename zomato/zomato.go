@@ -56,23 +56,9 @@ func (b *base) GetHttpRequest(r interface{}, apiPrefix string) ([]byte, error) {
 }
 
 var (
-	commonAPIInstance         CommonAPI
-	onceCommonAPIInstance     sync.Once
 	restaurantAPIInstance     RestaurantAPI
 	onceRestaurantAPIInstance sync.Once
 )
-
-type commonAPI struct {
-	base
-}
-
-func NewCommonAPI() (CommonAPI) {
-	onceCommonAPIInstance.Do(func() {
-		commonAPIInstance = &commonAPI{base: base{apiBaseURL: config.GetEnvs().ZomatoAPIUrl, apiKey: config.GetEnvs().ZomatoAPIKey}}
-	})
-
-	return commonAPIInstance
-}
 
 type RestaurantAPI interface {
 	SearchRestaurants(request *RestaurantsRequest) ([]*Restaurant, error)

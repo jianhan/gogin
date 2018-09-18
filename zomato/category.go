@@ -15,7 +15,7 @@ type Category struct {
 	Name string `json:"name"`
 }
 
-func (c *commonAPI) Categories() ([]*Category, error) {
+func (c *commonAPI) Categories() (*CategoryResponse, error) {
 	body, err := c.GetHttpRequest(nil, "categories")
 	if err != nil {
 		return nil, err
@@ -27,11 +27,5 @@ func (c *commonAPI) Categories() ([]*Category, error) {
 		return nil, err
 	}
 
-	// generate categories
-	categories := []*Category{}
-	for _, v := range categoryResponse.Categories {
-		categories = append(categories, &Category{ID: v.Categories.ID, Name: v.Categories.Name})
-	}
-
-	return categories, nil
+	return &categoryResponse, nil
 }

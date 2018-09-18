@@ -25,10 +25,10 @@ type Collection struct {
 }
 
 type CollectionsRequest struct {
-	CityID uint `json:"city_id" form:"city_id" binding:"required" url:"city_id"`
+	CityID uint `json:"city_id" form:"city_id" url:"city_id" binding:"required" validate:"required,min=1"`
 }
 
-func (c *commonAPI) Collections(request *CollectionsRequest) ([]*Collection, error) {
+func (c *commonAPI) Collections(request *CollectionsRequest) (*CollectionsResponse, error) {
 	body, err := c.GetHttpRequest(request, "collections")
 	if err != nil {
 		return nil, err
@@ -40,12 +40,5 @@ func (c *commonAPI) Collections(request *CollectionsRequest) ([]*Collection, err
 		return nil, err
 	}
 
-	// generate collections
-	collections := []*Collection{}
-
-	for k := range collectionsResponse.Collections {
-		collections = append(collections, &collectionsResponse.Collections[k].Collection)
-	}
-
-	return collections, nil
+	return &collectionsResponse, nil
 }

@@ -1,8 +1,6 @@
 package zomato
 
-import (
-	"encoding/json"
-)
+import "encoding/json"
 
 type CitiesResponse struct {
 	LocationSuggestions []City `json:"location_suggestions"`
@@ -27,14 +25,14 @@ type City struct {
 }
 
 type CitiesRequest struct {
-	Q       string `conform:"trim" form:"q" json:"q" url:"q"`
-	Lat     string `conform:"trim" form:"lat" json:"lat" binding:"required" url:"lat"`
-	Lon     string `conform:"trim" form:"lon" json:"lon" binding:"required" url:"lon"`
-	CityIDs string `conform:"trim" form:"city_ids" json:"city_ids" url:"city_ids"`
-	Count   uint   `form:"count" json:"count" url:"count"`
+	Q       string `json:"q" form:"q" url:"q,omitempty" conform:"trim"`
+	Lat     string `json:"lat" form:"lat" binding:"required" url:"lat,required" validate:"required,latitude" conform:"trim"`
+	Lon     string `json:"lon" form:"lon" binding:"required" url:"lon,required" validate:"required,longitude" conform:"trim" `
+	CityIDs string `json:"city_ids" form:"city_ids" url:"city_ids,omitempty" conform:"trim"`
+	Count   uint   `json:"count" form:"count" url:"count,omitempty" validate:"min=1,max=20"`
 }
 
-func (c *commonAPI) Cities(request *CitiesRequest) ([]*City, error) {
+func (c *commonAPI) Cities(request *CitiesRequest) (*CitiesResponse, error) {
 	body, err := c.GetHttpRequest(request, "cities")
 	if err != nil {
 		return nil, err
@@ -45,10 +43,5 @@ func (c *commonAPI) Cities(request *CitiesRequest) ([]*City, error) {
 		return nil, err
 	}
 
-	cities := []*City{}
-	for k := range citiesResponse.LocationSuggestions {
-		cities = append(cities, &citiesResponse.LocationSuggestions[k])
-	}
-
-	return cities, nil
+	return &citiesResponse, nil
 }

@@ -25,11 +25,11 @@ func main() {
 		IdleTimeout:       time.Duration(config.GetEnvs().IdleTimeout) * time.Second,
 		MaxHeaderBytes:    config.GetEnvs().MaxHeaderBytes,
 	}
+
 	s.ListenAndServe()
 }
 
-func
-getGinEngine() (*gin.Engine, error) {
+func getGinEngine() (*gin.Engine, error) {
 	r := gin.Default()
 
 	// get google map client

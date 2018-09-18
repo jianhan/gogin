@@ -12,10 +12,12 @@ import (
 	"time"
 )
 
+// googleAPIHandlerRegister register google handler func to handle all google related requests.
 type googleAPIHandlerRegister struct {
 	nearbySearch google.NearbySearch
 }
 
+// Register implements Register interface.
 func (g *googleAPIHandlerRegister) Register(r *gin.RouterGroup) {
 	store := persistence.NewInMemoryStore(time.Duration(5) * time.Minute)
 	googleNearbySearchRouter := r.Group("/google")
@@ -24,6 +26,7 @@ func (g *googleAPIHandlerRegister) Register(r *gin.RouterGroup) {
 	}
 }
 
+// NearbySearch contains logic for nearby search.
 func (g *googleAPIHandlerRegister) NearbySearch(c *gin.Context) {
 	// generate request
 	var req google.NearbySearchRequest
@@ -44,6 +47,7 @@ func (g *googleAPIHandlerRegister) NearbySearch(c *gin.Context) {
 	return
 }
 
+// NewGoogleAPIHandlerRegister returns a new google nearby search instance.
 func NewGoogleAPIHandlerRegister(nearbySearch google.NearbySearch) Register {
 	return &googleAPIHandlerRegister{nearbySearch: nearbySearch}
 }

@@ -5,22 +5,15 @@ import (
 	"github.com/jianhan/gogin/config"
 	"github.com/jianhan/gogin/google"
 	"github.com/jianhan/gogin/handler"
-	"log"
 	"net/http"
 	"time"
 )
 
 func main() {
-	r := gin.Default()
-
-	googleMapClient, err := google.NewGoogleMapClient()
+	r, err := getGinEngine()
 	if err != nil {
 		panic(err)
-		log.Fatalf("fatal error: %s", err)
 	}
-	handler.NewAPIHandlersRegister(
-		handler.NewGoogleAPIHandlerRegister(google.NewNearbySearch(googleMapClient)),
-	).Register(r)
 
 	// config server
 	s := &http.Server{
@@ -35,12 +28,20 @@ func main() {
 	s.ListenAndServe()
 }
 
-// newGinEngine return a new gin engine with optional functions.
-func newGinEngine(opts ...func(*gin.Engine)) *gin.Engine {
+func
+getGinEngine() (*gin.Engine, error) {
 	r := gin.Default()
-	for _, opt := range opts {
-		opt(r)
+
+	// get google map client
+	googleMapClient, err := google.NewGoogleMapClient()
+	if err != nil {
+		return nil, err
 	}
 
-	return r
+	// register google map handler
+	handler.NewAPIHandlersRegister(
+		handler.NewGoogleAPIHandlerRegister(google.NewNearbySearch(googleMapClient)),
+	).Register(r)
+
+	return r, nil
 }

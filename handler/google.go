@@ -1,18 +1,29 @@
 package handler
 
 import (
+	"github.com/gin-contrib/cache/persistence"
+	"github.com/gin-gonic/contrib/cache"
 	"github.com/gin-gonic/gin"
 	gerr "github.com/jianhan/gogin/error"
 	"github.com/jianhan/gogin/google"
 	"github.com/leebenson/conform"
 	"net/http"
+	"time"
 )
 
-type GoogleAPIHandler struct {
+type googleAPIHandlerRegister struct {
 	nearbySearch google.NearbySearch
 }
 
-func (g *GoogleAPIHandler) NearbySearch(c *gin.Context) {
+func (g *googleAPIHandlerRegister) Register(r *gin.RouterGroup) {
+	store := persistence.NewInMemoryStore(time.Duration(5) * time.Minute)
+	googleNearbySearch := r.Group("/google")
+	{
+		googleNearbySearch.GET("nearby-search", cache.CachePage(store, time.Duration(2)*time.Hour, googleNearbySearch))
+	}
+}
+
+func (g *googleAPIHandlerRegister) NearbySearch(c *gin.Context) {
 	// generate request
 	var req google.NearbySearchRequest
 	if err := c.ShouldBindQuery(&req); err != nil {
@@ -31,7 +42,6 @@ func (g *GoogleAPIHandler) NearbySearch(c *gin.Context) {
 	return
 }
 
-func googleNearbySearch(c *gin.Context) {
-
-	c.JSON(200, response.Results)
+func NewGoogleAPIHandlerRegister(nearbySearch google.NearbySearch) Register {
+	return &googleAPIHandlerRegister{nearbySearch: nearbySearch}
 }

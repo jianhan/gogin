@@ -1,13 +1,9 @@
 package handler
 
 import (
-	"fmt"
 	"github.com/gin-gonic/gin"
 	gerr "github.com/jianhan/gogin/error"
-	"github.com/jianhan/gogin/google"
 	"github.com/leebenson/conform"
-	"googlemaps.github.io/maps"
-	"gopkg.in/go-playground/validator.v9"
 	"net/http"
 )
 
@@ -30,51 +26,6 @@ func googleNearbySearch(c *gin.Context) {
 		return
 	}
 	conform.Strings(&req)
-
-	// validation
-	if vErr := validator.New().Struct(req); vErr != nil {
-		apiError := &gerr.APIError{Details: "validation error"}
-		if _, ok := vErr.(*validator.InvalidValidationError); ok {
-			c.JSON(http.StatusBadRequest, apiError)
-			return
-		}
-
-		for _, err := range vErr.(validator.ValidationErrors) {
-			apiError.AddData(err.Field(), fmt.Sprintf("invalid input for %s", err.Field()))
-		}
-
-		c.JSON(http.StatusBadRequest, apiError)
-		return
-	}
-
-	// generate request
-	client, err := google.MapClient()
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, &gerr.APIError{Details: err.Error()})
-		return
-	}
-	var searchRequest *maps.NearbySearchRequest
-	if req.PageToken != "" {
-		searchRequest = &maps.NearbySearchRequest{PageToken: req.PageToken}
-	} else {
-		searchRequest = &maps.NearbySearchRequest{
-			Location: &maps.LatLng{Lat: req.Lat, Lng: req.Lng},
-			Radius:   req.Radius,
-			MinPrice: maps.PriceLevel(req.MinPrice),
-			MaxPrice: maps.PriceLevel(req.MaxPrice),
-			Type:     maps.PlaceType("restaurant"),
-		}
-		if req.Keyword != "" {
-			searchRequest.Keyword = req.Keyword
-		}
-	}
-
-	// make API call
-	response, err := client.NearbySearch(c, searchRequest)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, &gerr.APIError{Details: err.Error()})
-		return
-	}
 
 	c.JSON(200, response.Results)
 }

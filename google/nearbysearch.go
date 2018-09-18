@@ -22,6 +22,7 @@ type NearbySearchRequest struct {
 	PageToken string  `json:"page_token,omitempty" form:"page_token,omitempty" url:"page_toke,omitempty" conform:"trim" `
 }
 
+// NewNearbySearch returns a new instance which implements NearbySearch.
 func NewNearbySearch(googleMapClient *maps.Client) NearbySearch {
 	return &nearbySearch{
 		googleMapClient: googleMapClient,
@@ -30,13 +31,15 @@ func NewNearbySearch(googleMapClient *maps.Client) NearbySearch {
 
 // NearbySearch defines interface method for nearby search.
 type NearbySearch interface {
-	Search(ctx context.Context, req *NearbySearchRequest) (*maps.PlacesSearchResponse, error)
+	Search(ctx context.Context, req *NearbySearchRequest) (*maps.PlacesSearchResponse, int, error)
 }
 
+// nearbySearch handle the logic of calling google nearby search API.
 type nearbySearch struct {
 	googleMapClient *maps.Client
 }
 
+// Search implements NearbySearch.
 func (n *nearbySearch) Search(ctx context.Context, req *NearbySearchRequest) (*maps.PlacesSearchResponse, int, error) {
 	// validation
 	if vErr := validator.New().Struct(req); vErr != nil {

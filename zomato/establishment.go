@@ -16,12 +16,12 @@ type EstablishmentsResponse struct {
 }
 
 type EstablishmentsRequest struct {
-	CityID uint    `json:"city_id" form:"city_id" binding:"required" url:"city_id"`
-	Lat    float64 `json:"lat" form:"lat" url:"lat" validate:"latitude"`
-	Lon    float64 `json:"lon" form:"lon" url:"lon" validate:"longitude"`
+	CityID uint   `json:"city_id" form:"city_id" binding:"required" url:"city_id"`
+	Lat    string `json:"lat" form:"lat" url:"lat,omitempty" validate:"latitude" conform:"trim"`
+	Lon    string `json:"lon" form:"lon" url:"lon,omitempty" validate:"longitude" conform:"trim"`
 }
 
-func (c *commonAPI) Establishments(request *EstablishmentsRequest) ([]*Establishment, error) {
+func (c *commonAPI) Establishments(request *EstablishmentsRequest) (*EstablishmentsResponse, error) {
 	body, err := c.GetHttpRequest(request, "establishments")
 	if err != nil {
 		return nil, err
@@ -33,11 +33,5 @@ func (c *commonAPI) Establishments(request *EstablishmentsRequest) ([]*Establish
 		return nil, err
 	}
 
-	// generate collections
-	establishments := []*Establishment{}
-	for k := range establishmentsResponse.Establishments {
-		establishments = append(establishments, &establishmentsResponse.Establishments[k].Establishment)
-	}
-
-	return establishments, nil
+	return &establishmentsResponse, nil
 }

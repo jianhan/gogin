@@ -14,12 +14,12 @@ type Cuisine struct {
 }
 
 type CuisinesRequest struct {
-	Lat    float64 `form:"lat" json:"lat" url:"lat" validate:"lat"`
-	Lon    float64 `form:"lon" json:"lon" url:"lon" validate:"lng"`
-	CityID uint    `form:"city_id" json:"city_id" binding:"required" url:"city_id"`
+	Lat    string `json:"lat" form:"lat" url:"lat,omitempty" validate:"latitude"`
+	Lon    string `json:"lon" form:"lon" url:"lon,omitempty" validate:"longitude"`
+	CityID uint   `json:"city_id" form:"city_id" binding:"required" url:"city_id,omitempty" validate:"required"`
 }
 
-func (c *commonAPI) Cuisines(request *CuisinesRequest) ([]*Cuisine, error) {
+func (c *commonAPI) Cuisines(request *CuisinesRequest) (*CuisinesResponse, error) {
 	body, err := c.GetHttpRequest(request, "cuisines")
 	if err != nil {
 		return nil, err
@@ -30,10 +30,5 @@ func (c *commonAPI) Cuisines(request *CuisinesRequest) ([]*Cuisine, error) {
 		return nil, err
 	}
 
-	cuisines := []*Cuisine{}
-	for k := range cuisinesResponse.Cuisines {
-		cuisines = append(cuisines, &cuisinesResponse.Cuisines[k].Cuisine)
-	}
-
-	return cuisines, nil
+	return &cuisinesResponse, nil
 }

@@ -27,7 +27,7 @@ type City struct {
 type CitiesRequest struct {
 	Q       string `json:"q" form:"q" url:"q,omitempty" conform:"trim"`
 	Lat     string `json:"lat" form:"lat" binding:"required" url:"lat,required" validate:"required,latitude" conform:"trim"`
-	Lon     string `json:"lon" form:"lon" binding:"required" url:"lon,required" validate:"required,longitude" conform:"trim" `
+	Lon     string `json:"lon" form:"lon" binding:"required" url:"lon,required" validate:"required,longitude" conform:"trim"`
 	CityIDs string `json:"city_ids" form:"city_ids" url:"city_ids,omitempty" conform:"trim"`
 	Count   uint   `json:"count" form:"count" url:"count,omitempty" validate:"min=1,max=20"`
 }

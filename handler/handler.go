@@ -10,8 +10,8 @@ import (
 
 func validateRequest(c *gin.Context, r interface{}) error {
 	// generate request
-	if err := c.ShouldBindQuery(r); err != nil {
-		return err
+	if err := c.BindQuery(r); err != nil {
+		return &gerr.APIError{Details: "unable to process request, invalid input"}
 	}
 	conform.Strings(&r)
 

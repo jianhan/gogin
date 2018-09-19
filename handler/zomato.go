@@ -42,11 +42,10 @@ func (g *zomatoCommonAPIHandlerRegister) Categories(c *gin.Context) {
 func (g *zomatoCommonAPIHandlerRegister) Cities(c *gin.Context) {
 	// generate request
 	var req zomato.CitiesRequest
-	if err := c.ShouldBindQuery(&req); err != nil {
-		c.JSON(http.StatusBadRequest, &gerr.APIError{Details: err.Error()})
+	if err := validateRequest(c, &req); err != nil {
+		c.JSON(http.StatusBadRequest, err)
 		return
 	}
-	conform.Strings(&req)
 
 	res, status, err := g.commonAPI.Cities(&req)
 	if err != nil {
@@ -60,11 +59,10 @@ func (g *zomatoCommonAPIHandlerRegister) Cities(c *gin.Context) {
 func (g *zomatoCommonAPIHandlerRegister) Collections(c *gin.Context) {
 	// generate request
 	var req zomato.CollectionsRequest
-	if err := c.ShouldBindQuery(&req); err != nil {
-		c.JSON(http.StatusBadRequest, &gerr.APIError{Details: err.Error()})
+	if err := validateRequest(c, req); err != nil {
+		c.JSON(http.StatusBadRequest, err)
 		return
 	}
-	conform.Strings(&req)
 
 	res, status, err := g.commonAPI.Collections(&req)
 	if err != nil {

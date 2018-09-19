@@ -1,8 +1,35 @@
 package handler
 
 import (
+	"fmt"
 	"github.com/gin-gonic/gin"
+	gerr "github.com/jianhan/gogin/error"
+	"github.com/leebenson/conform"
+	"gopkg.in/go-playground/validator.v9"
 )
+
+func validateRequest(c *gin.Context, r interface{}) error {
+	// generate request
+	if err := c.ShouldBindQuery(r); err != nil {
+		return err
+	}
+	conform.Strings(&r)
+
+	if vErr := validator.New().Struct(r); vErr != nil {
+		apiError := &gerr.APIError{Details: "validation error"}
+		if _, ok := vErr.(*validator.InvalidValidationError); ok {
+			return apiError
+		}
+
+		for _, err := range vErr.(validator.ValidationErrors) {
+			apiError.AddData(err.Field(), fmt.Sprintf("invalid input for %s", err.Field()))
+		}
+
+		return apiError
+	}
+
+	return nil
+}
 
 type Register interface {
 	Register(r *gin.RouterGroup)

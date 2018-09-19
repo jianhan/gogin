@@ -11,11 +11,11 @@ var (
 )
 
 type CommonAPI interface {
-	Categories() (*CategoryResponse, error)
-	Cities(request *CitiesRequest) (*CitiesResponse, error)
-	Collections(request *CollectionsRequest) (*CollectionsResponse, error)
-	Establishments(request *EstablishmentsRequest) (*EstablishmentsResponse, error)
-	Cuisines(request *CuisinesRequest) (*CuisinesResponse, error)
+	Categories() (*CategoryResponse, int, error)
+	Cities(request *CitiesRequest) (*CitiesResponse, int, error)
+	Collections(request *CollectionsRequest) (*CollectionsResponse, int, error)
+	Establishments(request *EstablishmentsRequest) (*EstablishmentsResponse, int, error)
+	Cuisines(request *CuisinesRequest) (*CuisinesResponse, int, error)
 }
 
 type commonAPI struct {

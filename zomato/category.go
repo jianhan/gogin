@@ -2,6 +2,7 @@ package zomato
 
 import (
 	"encoding/json"
+	"net/http"
 )
 
 type CategoryResponse struct {
@@ -15,17 +16,17 @@ type Category struct {
 	Name string `json:"name"`
 }
 
-func (c *commonAPI) Categories() (*CategoryResponse, error) {
+func (c *commonAPI) Categories() (*CategoryResponse, int, error) {
 	body, err := c.GetHttpRequest(nil, "categories")
 	if err != nil {
-		return nil, err
+		return nil, http.StatusInternalServerError, err
 	}
 
 	// unmarshal response
 	categoryResponse := CategoryResponse{}
 	if err := json.Unmarshal(body, &categoryResponse); err != nil {
-		return nil, err
+		return nil, http.StatusInternalServerError, err
 	}
 
-	return &categoryResponse, nil
+	return &categoryResponse, http.StatusOK, nil
 }

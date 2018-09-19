@@ -2,6 +2,7 @@ package zomato
 
 import (
 	"encoding/json"
+	"net/http"
 )
 
 type CollectionsResponse struct {
@@ -28,17 +29,17 @@ type CollectionsRequest struct {
 	CityID uint `json:"city_id" form:"city_id" url:"city_id" binding:"required" validate:"required,min=1"`
 }
 
-func (c *commonAPI) Collections(request *CollectionsRequest) (*CollectionsResponse, error) {
+func (c *commonAPI) Collections(request *CollectionsRequest) (*CollectionsResponse, int, error) {
 	body, err := c.GetHttpRequest(request, "collections")
 	if err != nil {
-		return nil, err
+		return nil, http.StatusBadRequest, err
 	}
 
 	// unmarshal to struct
 	collectionsResponse := CollectionsResponse{}
 	if err := json.Unmarshal(body, &collectionsResponse); err != nil {
-		return nil, err
+		return nil, http.StatusInternalServerError, err
 	}
 
-	return &collectionsResponse, nil
+	return &collectionsResponse, http.StatusOK, nil
 }

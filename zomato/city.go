@@ -1,6 +1,9 @@
 package zomato
 
-import "encoding/json"
+import (
+	"encoding/json"
+	"net/http"
+)
 
 type CitiesResponse struct {
 	LocationSuggestions []City `json:"location_suggestions"`
@@ -32,16 +35,16 @@ type CitiesRequest struct {
 	Count   uint   `json:"count" form:"count" url:"count,omitempty" validate:"min=1,max=20"`
 }
 
-func (c *commonAPI) Cities(request *CitiesRequest) (*CitiesResponse, error) {
+func (c *commonAPI) Cities(request *CitiesRequest) (*CitiesResponse, int, error) {
 	body, err := c.GetHttpRequest(request, "cities")
 	if err != nil {
-		return nil, err
+		return nil, http.StatusBadRequest, err
 	}
 
 	citiesResponse := CitiesResponse{}
 	if err := json.Unmarshal(body, &citiesResponse); err != nil {
-		return nil, err
+		return nil, http.StatusInternalServerError, err
 	}
 
-	return &citiesResponse, nil
+	return &citiesResponse, http.StatusOK, nil
 }

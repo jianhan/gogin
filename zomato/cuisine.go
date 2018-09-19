@@ -33,5 +33,5 @@ func (c *commonAPI) Cuisines(request *CuisinesRequest) (*CuisinesResponse, int, 
 		return nil, http.StatusInternalServerError, err
 	}
 
-	return &cuisinesResponse, http.StatusOK,nil
+	return &cuisinesResponse, http.StatusOK, nil
 }

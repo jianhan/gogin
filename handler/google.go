@@ -7,7 +7,6 @@ import (
 	gerr "github.com/jianhan/gogin/error"
 	"github.com/jianhan/gogin/google"
 	"github.com/leebenson/conform"
-	"github.com/sirupsen/logrus"
 	"net/http"
 	"time"
 )
@@ -35,7 +34,6 @@ func (g *googleAPIHandlerRegister) NearbySearch(c *gin.Context) {
 		return
 	}
 	conform.Strings(&req)
-	logrus.Info(req)
 
 	res, status, err := g.nearbySearch.Search(c, &req)
 	if err != nil {
@@ -44,7 +42,6 @@ func (g *googleAPIHandlerRegister) NearbySearch(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, res)
-	return
 }
 
 // NewGoogleAPIHandlerRegister returns a new google nearby search instance.

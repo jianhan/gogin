@@ -5,6 +5,7 @@ import (
 	"github.com/jianhan/gogin/config"
 	"github.com/jianhan/gogin/google"
 	"github.com/jianhan/gogin/handler"
+	"github.com/jianhan/gogin/zomato"
 	"net/http"
 	"time"
 )
@@ -41,6 +42,7 @@ func getGinEngine() (*gin.Engine, error) {
 	// register google map handler
 	handler.NewAPIHandlersRegister(
 		handler.NewGoogleAPIHandlerRegister(google.NewNearbySearch(googleMapClient)),
+		handler.NewZomatoCommonAPIHandlerRegister(zomato.NewCommonAPI()),
 	).Register(r)
 
 	return r, nil

@@ -17,9 +17,7 @@ type EstablishmentsResponse struct {
 }
 
 type EstablishmentsRequest struct {
-	CityID uint   `json:"city_id" form:"city_id" binding:"required" url:"city_id"`
-	Lat    string `json:"lat" form:"lat" url:"lat,omitempty" validate:"latitude" conform:"trim"`
-	Lon    string `json:"lon" form:"lon" url:"lon,omitempty" validate:"longitude" conform:"trim"`
+	CityID uint `json:"city_id" form:"city_id" url:"city_id"`
 }
 
 func (c *commonAPI) Establishments(request *EstablishmentsRequest) (*EstablishmentsResponse, int, error) {

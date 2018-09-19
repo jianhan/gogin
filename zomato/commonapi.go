@@ -5,6 +5,11 @@ import (
 	"sync"
 )
 
+var (
+	commonAPIInstance     CommonAPI
+	onceCommonAPIInstance sync.Once
+)
+
 type CommonAPI interface {
 	Categories() (*CategoryResponse, error)
 	Cities(request *CitiesRequest) (*CitiesResponse, error)
@@ -12,11 +17,6 @@ type CommonAPI interface {
 	Establishments(request *EstablishmentsRequest) (*EstablishmentsResponse, error)
 	Cuisines(request *CuisinesRequest) (*CuisinesResponse, error)
 }
-
-var (
-	commonAPIInstance     CommonAPI
-	onceCommonAPIInstance sync.Once
-)
 
 type commonAPI struct {
 	base

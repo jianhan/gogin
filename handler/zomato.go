@@ -4,9 +4,7 @@ import (
 	"github.com/gin-contrib/cache"
 	"github.com/gin-contrib/cache/persistence"
 	"github.com/gin-gonic/gin"
-	gerr "github.com/jianhan/gogin/error"
 	"github.com/jianhan/gogin/zomato"
-	"github.com/leebenson/conform"
 	"net/http"
 	"time"
 )
@@ -59,7 +57,7 @@ func (g *zomatoCommonAPIHandlerRegister) Cities(c *gin.Context) {
 func (g *zomatoCommonAPIHandlerRegister) Collections(c *gin.Context) {
 	// generate request
 	var req zomato.CollectionsRequest
-	if err := validateRequest(c, req); err != nil {
+	if err := validateRequest(c, &req); err != nil {
 		c.JSON(http.StatusBadRequest, err)
 		return
 	}
@@ -76,11 +74,10 @@ func (g *zomatoCommonAPIHandlerRegister) Collections(c *gin.Context) {
 func (g *zomatoCommonAPIHandlerRegister) Establishments(c *gin.Context) {
 	// generate request
 	var req zomato.EstablishmentsRequest
-	if err := c.ShouldBindQuery(&req); err != nil {
-		c.JSON(http.StatusBadRequest, &gerr.APIError{Details: err.Error()})
+	if err := validateRequest(c, &req); err != nil {
+		c.JSON(http.StatusBadRequest, err)
 		return
 	}
-	conform.Strings(&req)
 
 	res, status, err := g.commonAPI.Establishments(&req)
 	if err != nil {
@@ -94,11 +91,10 @@ func (g *zomatoCommonAPIHandlerRegister) Establishments(c *gin.Context) {
 func (g *zomatoCommonAPIHandlerRegister) Cuisines(c *gin.Context) {
 	// generate request
 	var req zomato.CuisinesRequest
-	if err := c.ShouldBindQuery(&req); err != nil {
-		c.JSON(http.StatusBadRequest, &gerr.APIError{Details: err.Error()})
+	if err := validateRequest(c, &req); err != nil {
+		c.JSON(http.StatusBadRequest, err)
 		return
 	}
-	conform.Strings(&req)
 
 	res, status, err := g.commonAPI.Cuisines(&req)
 	if err != nil {

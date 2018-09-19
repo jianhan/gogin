@@ -26,7 +26,7 @@ type Collection struct {
 }
 
 type CollectionsRequest struct {
-	CityID uint `json:"city_id" form:"city_id" url:"city_id" binding:"required" validate:"required,min=1"`
+	CityID uint `json:"city_id" form:"city_id" url:"city_id" binding:"required" validate:"required,numeric,min=1"`
 }
 
 func (c *commonAPI) Collections(request *CollectionsRequest) (*CollectionsResponse, int, error) {

@@ -4,9 +4,7 @@ import (
 	"github.com/gin-contrib/cache"
 	"github.com/gin-contrib/cache/persistence"
 	"github.com/gin-gonic/gin"
-	gerr "github.com/jianhan/gogin/error"
 	"github.com/jianhan/gogin/google"
-	"github.com/leebenson/conform"
 	"net/http"
 	"time"
 )
@@ -29,11 +27,10 @@ func (g *googleAPIHandlerRegister) Register(r *gin.RouterGroup) {
 func (g *googleAPIHandlerRegister) NearbySearch(c *gin.Context) {
 	// generate request
 	var req google.NearbySearchRequest
-	if err := c.ShouldBindQuery(&req); err != nil {
-		c.JSON(http.StatusBadRequest, &gerr.APIError{Details: err.Error()})
+	if err := validateRequest(c, &req); err != nil {
+		c.JSON(http.StatusBadRequest, err)
 		return
 	}
-	conform.Strings(&req)
 
 	res, status, err := g.nearbySearch.Search(c, &req)
 	if err != nil {
